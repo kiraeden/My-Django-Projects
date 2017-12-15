@@ -1,0 +1,260 @@
+{% extends "main/base.html" %}
+{% block content %}
+					{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#temp">Temp</a></li>
+						<li><a data-toggle="tab" href="#COMMREQ">Commercial Requirements</a></li>
+						<li><a data-toggle="tab" href="#HLTP">HLTP</a></li>
+						<li><a data-toggle="tab" href="#MLTP">MLTP</a></li>
+						<li><a data-toggle="tab" href="#TCI">Test Case Inventory</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="temp" class="tab-pane fade in active">
+							<h3>HandsOnTable Test</h3>
+							<div id="example"></div>
+							<script>
+							var data = [
+							  ["", "Ford", "Tesla", "Toyota", "Honda"],
+							  ["2017", 10, 11, 12, 13],
+							  ["2018", 20, 11, 14, 13],
+							  ["2019", 30, 15, 12, 13]
+							];
+							
+							var container = document.getElementById('example');
+							var hot = new Handsontable(container, {
+							  data: data,
+							  rowHeaders: true,
+							  colHeaders: true,
+							  stretchH: 'all',
+							  contextMenu: true,
+							  manualColumnFreeze: true
+							});
+							</script>
+						</div>
+						<div id="COMMREQ" class="tab-pane fade">
+							<h3>Commercial Requirements for {{ model.model_name }}</h3>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Commercial Requirment Name</th>
+										<th>Commercial Spec</th>
+									<tr>
+								</thead>
+								<tbody>
+						    	{% for req in model.commreq_set.all %}
+									<tr>
+										<td>{{ req.req_name }}</td>
+										<td>{{ req.spec_num }}</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div id="HLTP" class="tab-pane fade">
+							<h3>HLTP for {{ model.model_name }}</h3>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Epic</th>
+										<th>Source</th>
+										<th>Comments</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for req in model.commreq_set.all %}
+									<tr>
+										{% for hltp in req.hltp_set.all %}
+											<td>{{ hltp.epic }}</td>
+											<td>{{ hltp.source }}</td>
+											<td>{{ hltp.comments }}</td>
+										{% endfor %}
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div id="MLTP" class="tab-pane fade">
+							<h3>MLTP for {{ model.model_name }}</h3>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Test Section</th>
+										<th>Test Name</th>
+										<th>Notes</th>
+										<th>Source</th>
+										<th>FW Dev</th>
+										<th>Requirements Question</th>
+										<th>TDD</th>
+										<th>User Story</th>
+										<th>Product Spec</th>
+										<th>Team</th>
+										<th>Author</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for req in model.commreq_set.all %}
+									{% for hltp in req.hltp_set.all %}
+										<tr>
+										{% for mltp in hltp.mltp_set.all %}
+											<td>{{ mltp.test_section }}</td>
+											<td>{{ mltp.test_scenario_name }}</td>
+											<td>{{ mltp.test_scenario_notes }}</td>
+											<td>{{ mltp.source }}</td>
+											<td>{{ mltp.fw_dev }}</td>
+											<td>{{ mltp.req_question }}</td>
+											<td>{{ mltp.tdd }}</td>
+											<td>{{ mltp.user_story }}</td>
+											<td>{{ mltp.product_spec }}</td>
+											<td>{{ mltp.team }}</td>
+											<td>{{ mltp.author }}</td>
+										{% endfor %}
+										</tr>
+									{% endfor %}
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div id="TCI" class="tab-pane fade">
+							<h3>Test Case Inventory for {{ model.model_name }}</h3>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Suite Name</th>
+										<th>Test Case</th>
+										<th>Automated</th>
+										<th>New</th>
+										<th>Notes</th>
+										<th>Location</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for req in model.commreq_set.all %}
+									{% for hltp in req.hltp_set.all %}
+										{% for mltp in hltp.mltp_set.all %}
+											{% for tc in mltp.test_case_inventory_set.all %}
+												<tr>
+													<td>{{ tc.suite_name }}</td>
+													<td>{{ tc.test_case_name }}</td>
+													<td>{{ tc.automated }}</td>
+													<td>{{ tc.new_test }}</td>
+													<td>{{ tc.notes }}</td>
+													<td>{{ tc.file_path }}</td>
+												</tr>
+											{% endfor %}
+										{% endfor %}
+									{% endfor %}
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+					
+<script>
+	var dataObject = [
+    {id: 1, flag: 'EUR', currencyCode: 'EUR', currency: 'Euro',	level: 0.9033, units: 'EUR / USD', asOf: '08/19/2015', onedChng: 0.0026},
+    {id: 2, flag: 'JPY', currencyCode: 'JPY', currency: 'Japanese Yen', level: 124.3870, units: 'JPY / USD', asOf: '08/19/2015', onedChng: 0.0001},
+    {id: 3, flag: 'GBP', currencyCode: 'GBP', currency: 'Pound Sterling', level: 0.6396, units: 'GBP / USD', asOf: '08/19/2015', onedChng: 0.00},
+    {id: 4, flag: 'CHF', currencyCode: 'CHF', currency: 'Swiss Franc',	level: 0.9775, units: 'CHF / USD', asOf: '08/19/2015', onedChng: 0.0008},
+    {id: 5, flag: 'CAD', currencyCode: 'CAD', currency: 'Canadian Dollar',	level: 1.3097, units: 'CAD / USD', asOf: '08/19/2015', onedChng: -0.0005},
+    {id: 6, flag: 'AUD', currencyCode: 'AUD', currency: 'Australian Dollar',	level: 1.3589, units: 'AUD / USD', asOf: '08/19/2015', onedChng: 0.0020},
+    {id: 7, flag: 'NZD', currencyCode: 'NZD', currency: 'New Zealand Dollar',	level: 1.5218, units: 'NZD / USD', asOf: '08/19/2015', onedChng: -0.0036},
+    {id: 8, flag: 'SEK', currencyCode: 'SEK', currency: 'Swedish Krona',	level: 8.5280, units: 'SEK / USD', asOf: '08/19/2015', onedChng: 0.0016},
+    {id: 9, flag: 'NOK', currencyCode: 'NOK', currency: 'Norwegian Krone',	level: 8.2433, units: 'NOK / USD', asOf: '08/19/2015', onedChng: 0.0008},
+    {id: 10, flag: 'BRL', currencyCode: 'BRL', currency: 'Brazilian Real',	level: 3.4806, units: 'BRL / USD', asOf: '08/19/2015', onedChng: -0.0009},
+    {id: 11, flag: 'CNY', currencyCode: 'CNY', currency: 'Chinese Yuan',	level: 6.3961, units: 'CNY / USD', asOf: '08/19/2015', onedChng: 0.0004},
+    {id: 12, flag: 'RUB', currencyCode: 'RUB', currency: 'Russian Rouble',	level: 65.5980, units: 'RUB / USD', asOf: '08/19/2015', onedChng: 0.0059},
+    {id: 13, flag: 'INR', currencyCode: 'INR', currency: 'Indian Rupee',	level: 65.3724, units: 'INR / USD', asOf: '08/19/2015', onedChng: 0.0026},
+    {id: 14, flag: 'TRY', currencyCode: 'TRY', currency: 'New Turkish Lira',	level: 2.8689, units: 'TRY / USD', asOf: '08/19/2015', onedChng: 0.0092},
+    {id: 15, flag: 'THB', currencyCode: 'THB', currency: 'Thai Baht',	level: 35.5029, units: 'THB / USD', asOf: '08/19/2015', onedChng: 0.0044},
+    {id: 16, flag: 'IDR', currencyCode: 'IDR', currency: 'Indonesian Rupiah',	level: 13.83, units: 'IDR / USD', asOf: '08/19/2015', onedChng: -0.0009},
+    {id: 17, flag: 'MYR', currencyCode: 'MYR', currency: 'Malaysian Ringgit',	level: 4.0949, units: 'MYR / USD', asOf: '08/19/2015', onedChng: 0.0010},
+    {id: 18, flag: 'MXN', currencyCode: 'MXN', currency: 'Mexican New Peso',	level: 16.4309, units: 'MXN / USD', asOf: '08/19/2015', onedChng: 0.0017},
+    {id: 19, flag: 'ARS', currencyCode: 'ARS', currency: 'Argentinian Peso',	level: 9.2534, units: 'ARS / USD', asOf: '08/19/2015', onedChng: 0.0011},
+    {id: 20, flag: 'DKK', currencyCode: 'DKK', currency: 'Danish Krone',	level: 6.7417, units: 'DKK / USD', asOf: '08/19/2015', onedChng: 0.0025},
+    {id: 21, flag: 'ILS', currencyCode: 'ILS', currency: 'Israeli New Sheqel',	level: 3.8262, units: 'ILS / USD', asOf: '08/19/2015', onedChng: 0.0084},
+    {id: 22, flag: 'PHP', currencyCode: 'PHP', currency: 'Philippine Peso',	level: 46.3108, units: 'PHP / USD', asOf: '08/19/2015', onedChng: 0.0012}
+  ];
+  var currencyCodes = ['EUR', 'JPY', 'GBP', 'CHF', 'CAD', 'AUD', 'NZD', 'SEK', 'NOK', 'BRL', 'CNY', 'RUB', 'INR', 'TRY', 'THB', 'IDR', 'MYR', 'MXN', 'ARS', 'DKK', 'ILS', 'PHP'];
+
+  var flagRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+    var currencyCode = value;
+
+    while (td.firstChild) {
+      td.removeChild(td.firstChild);
+    }
+
+    if (currencyCodes.indexOf(currencyCode) > -1) {
+      var flagElement = document.createElement('DIV');
+      flagElement.className = 'flag ' + currencyCode.toLowerCase();
+      td.appendChild(flagElement);
+
+    } else {
+      var textNode = document.createTextNode(value === null ? '' : value);
+      td.appendChild(textNode);
+    }
+  };
+
+  var hotElement = document.querySelector('#hot');
+  var hotElementContainer = hotElement.parentNode;
+  var hotSettings = {
+    data: dataObject,
+    columns: [
+        {
+            data: 'id',
+            type: 'numeric',
+            width: 40
+        },
+        {
+            data: 'flag',
+			renderer: flagRenderer
+        },
+        {
+            data: 'currencyCode',
+            type: 'text'
+        },
+        {
+            data: 'currency',
+            type: 'text'
+        },
+        {
+            data: 'level',
+            type: 'numeric',
+            format: '0.0000'
+        },
+        {
+            data: 'units',
+            type: 'text'
+        },
+        {
+            data: 'asOf',
+            type: 'date',
+            dateFormat: 'MM/DD/YYYY'
+        },
+        {
+            data: 'onedChng',
+            type: 'numeric',
+            format: '0.00%'
+        }
+    ],
+    stretchH: 'all',
+    width: 806,
+    autoWrapRow: true,
+    height: 441,
+    maxRows: 22,
+    rowHeaders: true,
+    colHeaders: [
+        'ID',
+        'Country',
+        'Code',
+        'Currency',
+        'Level',
+        'Units',
+        'Date',
+        'Change'
+    ],
+    contextMenu: true
+};
+
+  var hot = new Handsontable(hotElement, hotSettings);
+</script>
+{% endblock %}

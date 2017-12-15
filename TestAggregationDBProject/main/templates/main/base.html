@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% load static %}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="favicon.ico">
+
+		<title>Test Aggregation Database Project</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'main/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+
+		<!-- Custom styles for this template -->
+		<link href="{% static 'main/css/dashboard.css' %}" rel="stylesheet" type="text/css">
+		
+		<!-- Tree Menu Style -->
+		<link href="{% static 'main/css/tree_menu.css' %}" rel="stylesheet" type="text/css">
+		
+		<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.35.0/handsontable.full.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.35.0/handsontable.full.min.js"></script>
+		
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/main/">Test Aggregation Database Project</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#">Logout</a></li>
+						<li><a href="#">Settings</a></li>
+						<li><a href="#">Profile</a></li>
+						<li><a href="#">Help</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-3 col-md-2 sidebar">
+					{% if product_names %}
+					<ul id="tree">
+						<li><a href="{% url 'main:index' %}">All Products</a></li>
+				    {% for name in product_names %}
+				        <li>{{ name }}
+				        <ul>
+				        {% if name.versions_set.all %}
+				        	<li><a href="{% url 'main:release' name.id %}">All Releases</a></li>
+				        {% for ver in name.versions_set.all %}
+				        	<li>{{ ver.version }}
+				        	<ul>
+				        	{% if ver.model_set.all %}
+				        		<li><a href="{% url 'main:models' name ver.id %}">All Models</a></li>
+				        	{% for model in ver.model_set.all %}
+				        		<li><a href="{% url 'main:data' name ver.version model.id %}">{{ model.model_name }}</a></li>
+				        	{% endfor %}
+				        	{% else %}
+				        		<li><a href="#">Create</a></li>
+				        	{% endif %}
+				        	</ul>
+				        	</li>
+				        {% endfor %}
+				        {% else %}
+				        	<li><a href="#">Create</a></li>
+				        {% endif %}
+				        </ul>
+				        </li>
+				    {% endfor %}
+				    </ul>
+					{% else %}
+				    <p>No products exist yet.</p>
+					{% endif %}
+				</div>
+				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				{% block content %}
+				{% endblock %}
+				</div>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'main/js/tree_menu.js' %}"></script>
+	</body>
+</html>
