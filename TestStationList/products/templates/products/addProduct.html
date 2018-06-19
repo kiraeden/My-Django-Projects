@@ -1,0 +1,11 @@
+{% extends 'stationList/base.html' %}
+{% block content %}
+	<div class="container" style="padding-top: 1rem">
+		<form method="post" action="{% url 'products:addNewProduct' %}">
+			{% csrf_token %}
+			<label for="product_name">Product Name:</label>
+			<input class="form-control" type="text" value="" name="product_name" />
+			<button class="btn btn-primary" type="submit">Add Product</button>
+		</form>
+	</div>
+{% endblock %}

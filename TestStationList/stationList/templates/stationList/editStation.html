@@ -1,0 +1,192 @@
+{% extends 'stationList/base.html' %}
+{% block content %}
+
+	<div class="container" style="padding-top: 2rem">
+		<h2>Edit Station Info for {{station.pc_name}}</h2>
+		<hr></hr>
+		<form action="{% url 'stationList:edit_station' %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="station_id" value="{{station.id}}" />
+			<div class="form-row">
+				<div class="form-group col-md-2">
+					<label for="pc_name">PC Name:</label>
+					<input class="form-control" type="text" name="pc_name" value="{{station.pc_name}}" />
+				</div>
+				<div class="form-group col-md-2">
+					<label for="fixture_location">Location:</label>
+					<input class="form-control" type="text" name="fixture_location" value="{{station.location}}" />
+				</div>
+				<div class="form-group col-md-2">
+					<label for="project_name">Project:</label>
+					<select name="project_name" class="form-control">
+						{% for product in product_list %}
+							{% ifequal product.product_name station.current_project %}
+								<option selected>{{station.current_project}}</option>
+							{% else %}
+								<option>{{product.product_name}}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="working">Working?:</label>
+					<select class="form-control" name="working">
+						{% if station.working %}
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+						{% else %}
+						<option value="True">Yes</option>
+						<option selected value="False">No</option>
+						{% endif %}
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="sspec">SSPEC:</label>
+					<input class="form-control" type="text" name="sspec" value="{{station.sspec}}" />
+				</div>
+				<div class="form-group col-md-1">
+					<label for="clapper">Clapper:</label>
+					<select class="form-control" name="clapper">
+						{% if station.clapper %}
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+						{% else %}
+						<option value="True">Yes</option>
+						<option selected value="False">No</option>
+						{% endif %}
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="dac">DAC:</label>
+					<select class="form-control" name="dac">
+						{% if station.dac %}
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+						{% else %}
+						<option value="True">Yes</option>
+						<option selected value="False">No</option>
+						{% endif %}
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="pmd">PMD:</label>
+					<select class="form-control" name="pmd">
+						{% if station.pmd %}
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+						{% else %}
+						<option value="True">Yes</option>
+						<option selected value="False">No</option>
+						{% endif %}
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-12">
+					<label for="gen_comment">Comment:</label>
+					<input class="form-control" type="text" name="gen_comment" value="{{station.comment}}" />
+				</div>
+			</div>
+			<div class="form-row">
+
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="box_id">Box ID:</label>
+					<input class="form-control" type="text" name="box_id" value="{{station.box_id}}" />
+				</div>
+				<div class="form-group col-md-4">
+					<label for="in_use_for">In Use For:</label>
+					<select disabled class="form-control" name="in_use_for">
+						<option>{{station.in_use_for}}
+						<option>None</option>
+						<option>Regression</option>
+						<option>Development</option>
+		                <option>Maintenance</option>
+		            </select>
+				</div>
+				<div class="form-group col-md-4">
+					<label for="checked_out">Checked Out:</label>
+					<input disabled class="form-control" type="text" name="checked_out" value="{{station.checked_out}}" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-3">
+					<label for="pc_os">PC OS:</label>
+					<select class="form-control" name="pc_os">
+						<option>{{station.pc_os}}</option>
+						<option>Windows 7</option>
+						<option>Windows 10</option>
+						<option>Windows XP</option>
+						<option>Linux</option>
+					</select>
+				</div>
+				<div class="form-group col-md-3">
+					<label for="ip_address">IP Address:</label>
+					<input class="form-control" type="text" name="ip_address" value="{{station.ip_address}}" />
+				</div>
+				<div class="form-group col-md-3">
+					<label for="mac_address">MAC Address:</label>
+					<input class="form-control" type="text" name="mac_address" value="{{station.mac_address}}" />
+				</div>
+				<div class="form-group col-md-3">
+					<label for="pc_port">PC Port Number:</label>
+					<input class="form-control" type="text" name="pc_port" value="{{station.pc_port_num}}" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="maintenance_date">Maintenance Date:</label>
+					<input class="form-control" type="date" name="maintenance_date" value="{{station.maintenance}}" />
+				</div>
+				<div class="form-group col-md-6">
+					<label for="maintainer">Maintainer:</label>
+					<input class="form-control" type="text" name="maintainer" value="{{station.maintainer}}" />
+				</div>
+			</div>
+			<div style="inline: block">
+				<button class="btn btn-primary" type="submit">Save Station</button>
+				<button class="btn btn-warning" type="button" onclick="ConfirmStationRelease({{station.id}})">Release Station</button>
+				<button class="btn btn-danger" type="button" onclick="ConfirmStationDelete({{station.id}})">Delete Station</button>
+			</div>
+		</form>
+		{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+	</div>
+	<script type="text/javascript">
+		function ConfirmStationDelete(id) {
+			if (confirm('Are you sure you want to delete this PC from the database?')) {
+				$.ajax({
+					url: "{% url 'stationList:delete_station' %}",
+					method: "POST",
+					data: {
+						id: id,
+						csrfmiddlewaretoken: '{{csrf_token}}',
+					},
+					success: function redirectToIndex() {
+						window.location.replace("{% url 'stationList:index' %}");
+					}
+				});
+			} else {
+				return false;
+			}
+		};
+		
+		function ConfirmStationRelease(id) {
+			if (confirm("Are you sure you want to forcibly release this PC from its current user?")) {
+				$.ajax({
+					url: "{% url 'stationList:release' %}",
+					method: "POST",
+					data: {
+						id: id,
+						csrfmiddlewaretoken: '{{csrf_token}}',
+					},
+					success: function redirectToIndex() {
+						window.location.replace("{% url 'stationList:index' %}");
+					}
+				});
+			} else {
+				return false;
+			}
+		};
+	</script>
+{% endblock %}

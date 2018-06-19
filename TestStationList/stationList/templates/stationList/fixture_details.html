@@ -1,0 +1,14 @@
+{% extends 'stationList/base.html' %}
+{% block content %}
+			<div class="container-fluid" style="padding-top: 1rem">
+				<div style="display: inline">
+					<h4>
+						<a class="badge badge-pill badge-secondary" href="{% url 'RegressionResults:inventory_view' release.product release release.id %}">View</a>
+						<a class="badge badge-pill badge-primary" href="{% url 'RegressionResults:inventory_add' release.product release release.id %}">Add</a>
+						<a class="badge badge-pill badge-secondary" href="{% url 'RegressionResults:inventory_edit' release.product release release.id %}">Edit</a>
+						<a style="margin-left: 3.5rem">Test Case Inventory for {{ release.product }} {{ release }}</a>
+						<button type="button" class="btn btn-dark" style="float: right" onclick="add_test_case()">Save</button>
+					</h4>
+				</div>
+			</div>
+{% endblock %}

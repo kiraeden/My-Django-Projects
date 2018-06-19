@@ -1,0 +1,27 @@
+{% extends 'stationList/base.html' %}
+{% block content %}
+	<div class="container" style="padding-top: 1rem">
+		<form method="post" action="{% url 'products:edit_product' %}">
+			{% csrf_token %}
+			<label for="product_name">Product Name:</label>
+			<input class="form-control" type="text" value="{{products.product_name}}" name="product_name" />
+			<button class="btn btn-primary" type="submit">Update Product</button>
+			<button type="button" class="btn btn-danger" onclick="deleteProduct({{products.id}})">Delete Product</button>
+		</form>
+	</div>
+	<script type="text/javascript">
+		function deleteProduct(id) {
+			$.ajax({
+				url: "{% url 'products:delete_product' %}",
+				method: 'POST',
+				data: {
+					id: id,
+					csrfmiddlewaretoken: '{{csrf_token}}',
+				},
+				success: function toIndex() {
+					window.location.replace("{% url 'products:product_index' %}");
+				}
+			});
+		}
+	</script>
+{% endblock %}

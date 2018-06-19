@@ -1,0 +1,117 @@
+{% extends 'stationList/base.html' %}
+{% block content %}
+
+	<div class="container" style="padding-top: 2rem">
+		<h2>Add a New Test Station to the Database</h2>
+		<hr></hr>
+		<form action="{% url 'stationList:add_station' %}" method="post">
+			{% csrf_token %}
+			<div class="form-row">
+				<div class="form-group col-md-2">
+					<label for="pc_name">PC Name:</label>
+					<input class="form-control" type="text" name="pc_name" value="" />
+				</div>
+				<div class="form-group col-md-2">
+					<label for="fixture_location">Location:</label>
+					<input class="form-control" type="text" name="fixture_location" value="" />
+				</div>
+				<div class="form-group col-md-2">
+					<label for="project_name">Project:</label>
+					<select class="form-control" name="project_name">
+						{% for product in product_list %}
+						<option>{{product.product_name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="working">Working?:</label>
+					<select class="form-control" name="working">
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="sspec">SSPEC:</label>
+					<input class="form-control" type="text" name="sspec" value="" />
+				</div>
+				<div class="form-group col-md-1">
+					<label for="clapper">Clapper:</label>
+					<select class="form-control" name="clapper">
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="dac">DAC:</label>
+					<select class="form-control" name="dac">
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="pmd">PMD:</label>
+					<select class="form-control" name="pmd">
+						<option selected value="True">Yes</option>
+						<option value="False">No</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-12">
+					<label for="gen_comment">Comment:</label>
+					<input class="form-control" type="text" name="gen_comment" value="" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="box_id">Box ID:</label>
+					<input class="form-control" type="text" name="box_id" value="" />
+				</div>
+				<div class="form-group col-md-4">
+					<label for="in_use_for">In Use For:</label>
+					<input disabled class="form-control" type="text" name="in_use_for" value="" />
+				</div>
+				<div class="form-group col-md-4">
+					<label for="checked_out">Checked Out:</label>
+					<input disabled class="form-control" type="text" name="checked_out" value="" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-3">
+					<label for="pc_os">PC OS:</label>
+					<select class="form-control" name="pc_os">
+						<option>Windows 7</option>
+						<option>Windows 10</option>
+						<option>Windows XP</option>
+						<option>Linux</option>
+					</select>
+				</div>
+				<div class="form-group col-md-3">
+					<label for="ip_address">IP Address:</label>
+					<input class="form-control" type="text" name="ip_address" value="" />
+				</div>
+				<div class="form-group col-md-3">
+					<label for="mac_address">MAC Address:</label>
+					<input class="form-control" type="text" name="mac_address" value="" />
+				</div>
+				<div class="form-group col-md-3">
+					<label for="pc_port">PC Port Number:</label>
+					<input class="form-control" type="text" name="pc_port" value="" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="maintenance_date">Maintenance Date:</label>
+					<input disabled class="form-control" type="date" name="maintenance_date" value="" />
+				</div>
+				<div class="form-group col-md-6">
+					<label for="maintainer">Maintainer:</label>
+					<input disabled class="form-control" type="text" name="maintainer" value="" />
+				</div>
+			</div>
+			<button class="btn btn-primary" type="submit">Add Station</button>
+		</form>
+		{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+	</div>
+
+{% endblock %}
